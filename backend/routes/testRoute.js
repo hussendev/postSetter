@@ -7,8 +7,8 @@ const {getPosts,creatPost,updatePost,deletePost}=require('../controller/testCont
 
 
 
-router.route('/api/test').get(getPosts).post(creatPost)
-router.route('/api/test/:id').put(updatePost).delete(deletePost)
+router.route('/api/post').get(getPosts).post(creatPost)
+router.route('/api/post/:id').put(updatePost).delete(deletePost)
 
 
 

@@ -1,12 +1,10 @@
 const asyncHandler = require('express-async-handler')
+const Post = require('../models/post.js')
 const getPosts = asyncHandler(
-
-    (req,res) =>{
+    async  (req,res) =>{
+        const posts = await Post.find({}).sort()
         res.status(200).json(
-        {
-            "message": "get posts",
-            "status": "success"
-        }
+            posts
     )
     }
 )
@@ -15,6 +13,7 @@ const getPosts = asyncHandler(
 
 const creatPost = asyncHandler(
     async (req,res) =>{
+      
         if (req.body.text == null || req.body.text == "") {
             res.status(400).json(
                 {
@@ -22,21 +21,43 @@ const creatPost = asyncHandler(
                     "status": "error"
                 })
         }
+        const post = await Post.create({
+                text: req.body.text,
+            })
         
-        res.status(201).json(
-        {
-            "message": "Created successfully",
-            "status": "success"
-        }
+        res.status(200).json(
+            post
     )
     }
 )
 const updatePost = asyncHandler(
     async (req,res) =>{
+
+        const post=await Post.findById(req.params.id)
+        if(!post){
+            res.status(400).json(
+                {
+                    "message": "this post not found",
+                    "status": "error"
+                })
+
+        }
+
+
+        const postUpdated=await Post.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            {
+                new:true,
+                runValidators:true
+            }
+
+        )
         res.status(200).json(
         {
             "message": `${req.params.id} Updated successfully`,
-            "status": "success"
+            "status": "success",
+            "data": postUpdated
         }
     )
     }
@@ -44,10 +65,21 @@ const updatePost = asyncHandler(
 
 const deletePost = asyncHandler(
     async (req,res) =>{
+
+        const post=await Post.findById(req.params.id)
+        if(!post){
+            res.status(400).json(
+                {
+                    "message": "this post not found",
+                    "status": "error"
+                })
+            }
+            const postDeleted=await Post.findByIdAndDelete(req.params.id)
         res.status(200).json(
         {
             "message": `${req.params.id} Deleted successfully` ,
-            "status": "success"
+            "status": "success",
+            "data": postDeleted
         }
     )
     }
