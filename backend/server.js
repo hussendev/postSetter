@@ -10,7 +10,8 @@ connectDB()
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
-app.use(require('./routes/testRoute.js'))
+app.use(require('./routes/postRoute.js'))
+app.use(require('./routes/userRoute.js'))
 
 
 app.listen(port, () => console.log(`Server running on port ${port}`))
